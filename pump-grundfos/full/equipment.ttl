@@ -1,0 +1,171 @@
+@prefix : <https://nlp-tlp.org/ontology/eqp/ont/core#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix eqp: <https://nlp-tlp.org/ontology/eqp/rdl/> .
+@prefix lis: <http://rds.posccaesar.org/ontology/lis14/rdl/> .
+@prefix ns1: <https://spec.industrialontologies.org/ontology/core/meta/AnnotationVocabulary/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@base <https://nlp-tlp.org/ontology/eqp/ont/core> .
+
+<https://nlp-tlp.org/ontology/eqp/ont/core> rdf:type owl:Ontology ;
+                                             owl:versionIRI <https://nlp-tlp.org/ontology/eqp/ont/core/0.1> ;
+                                             owl:imports <http://rds.posccaesar.org/ontology/lis14/ont/core/4.2> ;
+                                             terms:description "High-level equipment ontology aligned with the Industrial Data Ontology (IDO) to express equipment and make model information." ;
+                                             terms:title "Plant Equipment Ontology" .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/designationOf
+eqp:designationOf rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf lis:isAbout ;
+                  owl:inverseOf eqp:hasDesignation ;
+                  rdf:type owl:FunctionalProperty ;
+                  rdfs:domain eqp:Designation ;
+                  rdfs:range eqp:Component ,
+                             eqp:Equipment ;
+                  rdfs:label "designationOf" .
+
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/hasDesignation
+eqp:hasDesignation rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf lis:representedIn ;
+                   rdfs:domain [ rdf:type owl:Class ;
+                                 owl:unionOf ( eqp:Component
+                                               eqp:Equipment
+                                             )
+                               ] ;
+                   rdfs:range eqp:Designation ;
+                   rdfs:label "hasDesignation" ;
+                   skos:example "Product model ID string of a pump." ;
+                   ns1:naturalLanguageDefinition "Relates an equipment entity to a designation/ product or model ID that identifies or characterises it." .
+
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/hasToken
+eqp:hasToken rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf lis:hasContentPart ;
+             owl:inverseOf eqp:tokenOf ;
+             rdfs:domain eqp:Designation ;
+             rdfs:range eqp:DesignationToken ;
+             rdfs:label "hasToken" ;
+             ns1:naturalLanguageDefinition "Relates an equipment designation to one of its constituent symbolic components." .
+
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/tokenOf
+eqp:tokenOf rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf lis:contentPartOf ;
+            rdf:type owl:FunctionalProperty ;
+            rdfs:domain eqp:DesignationToken ;
+            rdfs:range eqp:Designation ;
+            rdfs:label "tokenOf" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/designationValue
+eqp:designationValue rdf:type owl:DatatypeProperty ,
+                              owl:FunctionalProperty ;
+                     rdfs:domain eqp:Designation ,
+                                 eqp:DesignationToken ;
+                     rdfs:range xsd:string ;
+                     rdfs:label "designationValue" ;
+                     ns1:naturalLanguageDefinition "The literal symbolic content of a designation or designation token." .
+
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/tokenOrder
+eqp:tokenOrder rdf:type owl:DatatypeProperty ,
+                        owl:FunctionalProperty ;
+               rdfs:domain eqp:DesignationToken ;
+               rdfs:range xsd:positiveInteger ;
+               rdfs:label "tokenOrder" ;
+               ns1:naturalLanguageDefinition "The positional ordering of a token within a designation." .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/Component
+eqp:Component rdf:type owl:Class ;
+              rdfs:subClassOf lis:PhysicalArtefact ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty lis:hasAssembledPart ;
+                                owl:allValuesFrom eqp:Component
+                              ] ;
+              owl:disjointWith eqp:Equipment ;
+              rdfs:label "Component" ;
+              skos:example "Constituent parts of equipment or equipment components, like impellers, casings, motors, or bearings of a pump." ;
+              ns1:naturalLanguageDefinition "An object that forms a functional or structural part of an equipment item." .
+
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/Designation
+eqp:Designation rdf:type owl:Class ;
+                rdfs:subClassOf lis:InformationObject ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty eqp:hasToken ;
+                                  owl:someValuesFrom eqp:DesignationToken
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty eqp:designationOf ;
+                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                  owl:onClass [ rdf:type owl:Class ;
+                                                owl:unionOf ( eqp:Component
+                                                              eqp:Equipment
+                                                            )
+                                              ]
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty eqp:designationValue ;
+                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                  owl:onDataRange xsd:string
+                                ] ;
+                owl:disjointWith eqp:DesignationToken ;
+                rdfs:label "Designation" ;
+                skos:example "Full product ID code for a specific make of pump, which might include separate tokens corresponding to manufacturer name or core specification values." ;
+                ns1:naturalLanguageDefinition "Designation/ Identifier for an equipment model." .
+
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/DesignationToken
+eqp:DesignationToken rdf:type owl:Class ;
+                     rdfs:subClassOf lis:InformationObject ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty eqp:tokenOf ;
+                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                       owl:onClass eqp:Designation
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty eqp:designationValue ;
+                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                       owl:onDataRange xsd:string
+                                     ] ;
+                     rdfs:label "DesignationToken" ;
+                     skos:example "A prefix, code, or numeric segment separated by dashes or other special characters in an ID string." ;
+                     ns1:naturalLanguageDefinition "An atomic syntactic fragment of an equipment designation/ID." .
+
+
+###  https://nlp-tlp.org/ontology/eqp/rdl/Equipment
+eqp:Equipment rdf:type owl:Class ;
+              rdfs:subClassOf lis:PhysicalArtefact ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty lis:connectedTo ;
+                                owl:allValuesFrom eqp:Equipment
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty lis:hasAssembledPart ;
+                                owl:allValuesFrom eqp:Component
+                              ] ;
+              rdfs:label "Equipment" ;
+              skos:example "Higher-level industrial assets that are identified by a model designation such as pumps, valves, motors, and tanks." ;
+              ns1:naturalLanguageDefinition "An object that performs an engineered function within a system or process." .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
