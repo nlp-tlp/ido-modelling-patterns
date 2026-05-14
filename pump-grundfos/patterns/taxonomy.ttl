@@ -40,6 +40,10 @@ lis:hasContentPart rdf:type owl:AnnotationProperty .
 lis:hasMaterialPart rdf:type owl:AnnotationProperty .
 
 
+###  http://rds.posccaesar.org/ontology/lis14/rdl/hasPart
+lis:hasPart rdf:type owl:AnnotationProperty .
+
+
 ###  http://rds.posccaesar.org/ontology/lis14/rdl/isAbout
 lis:isAbout rdf:type owl:AnnotationProperty .
 
@@ -86,17 +90,6 @@ pump:DirectActingSteamPump rdf:type owl:Class ;
 pump:HighSpeedPlungerPump rdf:type owl:Class ;
                           rdfs:subClassOf pump:PumpWithSpecifiedApplication ;
                           rdfs:label "High Speed Plunger Pump" .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/Motor
-pump:Motor rdf:type owl:Class ;
-           rdfs:subClassOf eqp:Equipment ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty lis:hasAssembledPart ;
-                             owl:allValuesFrom pump:PumpPart
-                           ] ;
-           rdfs:label "Motor" .
-
 
 ###  https://nlp-tlp.org/ontology/pump/rdl/Pump
 pump:Pump rdf:type owl:Class ;
@@ -380,175 +373,28 @@ pump:RotaryPump rdf:type owl:Class ;
                 rdfs:subClassOf pump:PumpWithSpecifiedMotion ;
                 rdfs:label "Rotary Pump" .
 
-
 #################################################################
 #    Individuals
 #################################################################
-
-###  https://nlp-tlp.org/ontology/pump/rdl/Grundfos
-pump:Grundfos rdf:type owl:NamedIndividual ,
-                       eqp:Manufacturer ;
-              rdfs:label "Grundfos" .
-
 
 ###  https://nlp-tlp.org/ontology/pump/rdl/P-101
 pump:P-101 rdf:type owl:NamedIndividual ,
                     pump:CentrifugalPump ,
                     pump:PumpWithEndSuction ,
                     pump:PumpWithSingleStage ;
-           lis:hasAssembledPart pump:P-101_volute ;
-           lis:hasPhysicalQuantity pump:P-101_rated_flow_rate ,
-                                   pump:P-101_rated_head ,
-                                   pump:P-101_speed ;
-           eqp:hasDesignation pump:P-101_designation ;
-           eqp:hasManufacturer pump:Grundfos ;
-           lis:hasAssembledPart pump:P-101_impeller ;
+           lis:hasAssembledPart pump:P-101_impeller ,
+                                pump:P-101_volute ;
            rdfs:label "P-101" .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_designation
-pump:P-101_designation rdf:type owl:NamedIndividual ,
-                                eqp:Designation ;
-                       lis:hasContentPart pump:P-101_designation_token1 ,
-                                          pump:P-101_designation_token2 ,
-                                          pump:P-101_designation_token3 ,
-                                          pump:P-101_designation_token4 ,
-                                          pump:P-101_designation_token5 ;
-                       eqp:designationValue "Grundfos NB 50-160/150" .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_designation_token1
-pump:P-101_designation_token1 rdf:type owl:NamedIndividual ,
-                                       eqp:DesignationToken ;
-                              lis:isAbout pump:Grundfos ;
-                              eqp:designationValue "Grundfos" ;
-                              eqp:tokenOrder "1"^^xsd:positiveInteger .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_designation_token2
-pump:P-101_designation_token2 rdf:type owl:NamedIndividual ,
-                                       eqp:DesignationToken ;
-                              eqp:designationValue "NB" ;
-                              eqp:tokenOrder "2"^^xsd:positiveInteger .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_designation_token3
-pump:P-101_designation_token3 rdf:type owl:NamedIndividual ,
-                                       eqp:DesignationToken ;
-                              eqp:designationValue "50" ;
-                              eqp:tokenOrder "3"^^xsd:positiveInteger .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_designation_token4
-pump:P-101_designation_token4 rdf:type owl:NamedIndividual ,
-                                       eqp:DesignationToken ;
-                              eqp:designationValue "160" ;
-                              eqp:tokenOrder "4"^^xsd:positiveInteger .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_designation_token5
-pump:P-101_designation_token5 rdf:type owl:NamedIndividual ,
-                                       eqp:DesignationToken ;
-                              lis:isAbout pump:P-101_impeller_diameter ;
-                              eqp:designationValue "150" ;
-                              eqp:tokenOrder "5"^^xsd:positiveInteger .
 
 
 ###  https://nlp-tlp.org/ontology/pump/rdl/P-101_impeller
 pump:P-101_impeller rdf:type owl:NamedIndividual ,
-                             pump:PumpImpeller ;
-                    lis:hasMaterialPart pump:stainless_steel ;
-                    lis:hasPhysicalQuantity pump:P-101_impeller_diameter .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_impeller_diameter
-pump:P-101_impeller_diameter rdf:type owl:NamedIndividual ,
-                                      plm:PCA_100003585 ;
-                             lis:qualityQuantifiedAs pump:dat_150_mm .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_motor
-pump:P-101_motor rdf:type owl:NamedIndividual ,
-                          pump:Motor ;
-                 lis:connectedTo pump:P-101 ;
-                 lis:hasPhysicalQuantity pump:P-101_motor_power .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_motor_power
-pump:P-101_motor_power rdf:type owl:NamedIndividual ,
-                                plm:PCA_100003595 ;
-                       lis:qualityQuantifiedAs pump:dat_7_5_kw .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_rated_flow_rate
-pump:P-101_rated_flow_rate rdf:type owl:NamedIndividual ,
-                                    plm:PCA_100003606 ;
-                           lis:qualityQuantifiedAs pump:dat_50_m3ph .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_rated_head
-pump:P-101_rated_head rdf:type owl:NamedIndividual ,
-                               plm:PCA_100003596 ;
-                      lis:qualityQuantifiedAs pump:dat_3_bar .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/P-101_speed
-pump:P-101_speed rdf:type owl:NamedIndividual ,
-                          plm:PCA_100003564 ;
-                 lis:qualityQuantifiedAs pump:dat_2900_rpm .
+                             pump:PumpImpeller .
 
 
 ###  https://nlp-tlp.org/ontology/pump/rdl/P-101_volute
 pump:P-101_volute rdf:type owl:NamedIndividual ,
-                           pump:PumpVolute ;
-                  lis:hasMaterialPart pump:cast_iron .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/cast_iron
-pump:cast_iron rdf:type owl:NamedIndividual ,
-                        lis:Compound ;
-               rdfs:label "Cast Iron" .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/dat_150_mm
-pump:dat_150_mm rdf:type owl:NamedIndividual ,
-                         plm:PCA_100003611 ;
-                lis:datumUOM plm:PCA_100003706 ;
-                lis:datumValue 150 .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/dat_2900_rpm
-pump:dat_2900_rpm rdf:type owl:NamedIndividual ,
-                           plm:PCA_100003638 ;
-                  lis:datumUOM plm:PCA_100005233 ;
-                  lis:datumValue 2900 .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/dat_3_bar
-pump:dat_3_bar rdf:type owl:NamedIndividual ,
-                        plm:PCA_100003623 ;
-               lis:datumUOM plm:PCA_100003659 ;
-               lis:datumValue 3 .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/dat_50_m3ph
-pump:dat_50_m3ph rdf:type owl:NamedIndividual ,
-                          plm:PCA_100003619 ;
-                 lis:datumUOM plm:PCA_100003652 ;
-                 lis:datumValue 50 .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/dat_7_5_kw
-pump:dat_7_5_kw rdf:type owl:NamedIndividual ,
-                         plm:PCA_100003627 ;
-                lis:datumUOM plm:PCA_100003691 ;
-                lis:datumValue 7.5 .
-
-
-###  https://nlp-tlp.org/ontology/pump/rdl/stainless_steel
-pump:stainless_steel rdf:type owl:NamedIndividual ,
-                              lis:Compound ;
-                     rdfs:label "Stainless Steel" .
+                           pump:PumpVolute .
 
 
 ###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
